@@ -4,7 +4,7 @@ import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import UseAuth from '../Hooks/UseAuth';
-// import Cookie from 'Cookie'
+import Cookie from 'cookiejs'
 
 function Login() {
 
@@ -17,7 +17,7 @@ function Login() {
     const navigate = useNavigate();
 
     const [formErrors, setFormErrors] = useState({});
-    const [isSubmit, setIsSubmit] = useState(false)
+    const [isSubmit, setIsSubmit] = useState(false);
 
     const id = 'secret'
     const id2 = 'secret'
@@ -61,12 +61,13 @@ function Login() {
 
                     setTimeout(() => {
                         setAuth(data.data.isUser);
-
+                        localStorage.setItem("userInfo", JSON.stringify(data.data.isUser))
+                        Cookie.set('jwt', data.data.accessToken, {expires: 7});
                         navigate('/');
                     }, 2000);
                 }
             }).catch((error) => {
-                console.log(error)
+                console.log(error);
             })
         }
     }, [formErrors])

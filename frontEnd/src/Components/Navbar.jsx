@@ -1,16 +1,27 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import cookie from 'cookiejs'
+import UseAuth from '../Hooks/UseAuth';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const {setAuth} = UseAuth()
   const { pathname } = location
+  const navigate = useNavigate()
   let activeElementClasses = "text-blue-700 px-3 py-2 rounded-md text-sm font-bold";
   let nonActiveElementClasses = "text-gray-600 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium";
 
   <li className={pathname == "/" ? activeElementClasses : nonActiveElementClasses} onClick={() => navigate('/')}>Home</li>
 
   const toggle = () => setIsOpen(!isOpen);
+
+  const handleLogout = () => {
+     cookie.remove("jwt");
+     localStorage.removeItem("userInfo");
+     setAuth('');
+     navigate('/login');
+  }
 
   return (
     <nav className="bg-gray-50 shadow">
@@ -73,12 +84,12 @@ const Navbar = () => {
             >
               Profile
             </Link>
-            <Link
-              to="/login"
+            <button
+              onClick={() => handleLogout()}
               className={pathname == "/login" ? activeElementClasses : nonActiveElementClasses}
             >
               Logout
-            </Link>
+            </button>
           </div>
         </div>
       </div>
